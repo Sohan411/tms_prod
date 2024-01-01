@@ -7,10 +7,10 @@ const broker = 'ws://dashboard.senselive.in:9001';
 
 // MySQL configuration
 const mysqlConfig = {
-    host: 'senselivedb.cn5vfllmzwrp.ap-south-1.rds.amazonaws.com',
-        user: 'admin',
+        host: '13.200.38.129',
+        user: 'mysql',
         password: 'sense!123',
-        database: 'tmp',
+        database: 'tms',
   port: 3306, // MySQL default port is 3306
 };
 
@@ -62,27 +62,17 @@ mqttClient.on('connect', () => {
 mqttClient.on('message', (topic, message) => {
   try {
     const data = JSON.parse(message);
-    const date = new Date().toISOString();
-
-    // Check if flowRate and totalVolume exist before dividing by 1000
-    if ('flowRate' in data) {
-      data.flowRate /= 1000;
-    }
-
-    if ('totalVolume' in data) {
-      data.totalVolume /= 1000;
-    }
+    //const date = new Date().toISOString();
 
     //console.log(data);
     const insertQuery = `
     INSERT INTO actual_data (DeviceUID, Temperature, Timestamp, TemperatureR, TemperatureY, TemperatureB, Humidity, flowRate, totalVolume, ip_address)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const insertValues = [
       data.DeviceUID,
       data.Temperature,
-      date,
       data.TemperatureR,
       data.TemperatureY,
       data.TemperatureB,
@@ -96,7 +86,7 @@ mqttClient.on('message', (topic, message) => {
       if (error) {
         console.error('Error inserting data into MySQL:', error);
       } else {
-       // console.log('Data inserted into MySQL');
+      //console.log('Data inserted into MySQL');
       }
     });
   } catch (error) {
