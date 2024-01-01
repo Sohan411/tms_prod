@@ -40,7 +40,7 @@ app.use(router);
 const httpsServer = https.createServer(credentials, app);
 
 httpsServer.listen(3000, () => {
-  console.log('HTTPS server listening on port ${port} ');
+  console.log(`HTTPS server listening on port ${port}`);
 });
 // // Start the server
 // app.listen(port, () => {
