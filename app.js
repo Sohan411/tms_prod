@@ -6,9 +6,11 @@ const bodyParser = require('body-parser');
 const https = require('https')
 
 const privateKey = fs.readFileSync('./certs/private-key.pem', 'utf8');
-const fullchain = fs.readFileSync('./certs/ca-cert.pem', 'utf8');
+const publicCert = fs.readFileSync('./certs/public-cert.pem', 'utf8');
+const certificateChain = fs.readFileSync('./certs/ca-cert.pem', 'utf8');
 
-const credentials = { key: privateKey, cert: fullchain };
+const credentials = { key: privateKey, cert: publicCert, ca: certificateChain };
+
 
 const app = express();
 
