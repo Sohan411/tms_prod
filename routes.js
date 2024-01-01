@@ -50,6 +50,10 @@ router.get('/Total-Volume-Month/:deviceId', dashboard.getTotalVolumeForMonth);
 router.get('/Total-Volume-Today-Email/:CompanyEmail', dashboard.getTotalVolumeForTodayEmail);
 router.get('/Total-Volume-Month-Email/:CompanyEmail', dashboard.getTotalVolumeForMonthEmail);
 router.get('/ConsuptionByIntervalBar/:deviceId', dashboard.getTotalVolumeForDuration);
+router.get('/ConsuptionByCustomBar/:deviceId/:startDate/:endDate', dashboard.getWaterConsumptionForDateRange);
+router.get('/fetchLatestEntry/:companyEmail', dashboard.fetchLatestEntry);
+router.delete('/delete-device/:deviceUID', dashboard.deleteDevice);
+router.put('/edit-User/:userId', dashboard.editUser);
 //SA
 router.get('/fetchAllDevices', SA.fetchAllDevices);
 router.get('/fetchAllUsers', SA.fetchAllUsers);
@@ -60,25 +64,28 @@ router.put('/updateDevice/:deviceUID', SA.updateDevice);
 router.delete('/deleteDevice/:deviceUID', SA.deleteDevice);
 router.get('/fetchCompanyDetails/:CompanyEmail', SA.fetchCompanyDetails);
 router.get('/fetchCounts/:CompanyEmail', SA.fetchCounts);
-router.get('/apilogs/:interval', SA.apilogs);
-router.get('/logs/:interval', SA.fetchLogs);
-router.get('/devicelogs', SA.devicelogs);
+//router.get('/apilogs/:interval', SA.apilogs);
+// router.get('/logs/:interval', SA.fetchLogs);
+//router.get('/devicelogs', SA.devicelogs);
 router.delete('/removeUser/:userId', SA.removeUser);
 router.get('/usermanagement', SA.usermanagement);
 router.get('/userInfo', SA.userInfo);
 router.get('/devInfo', SA.deviceInfo);
 router.get('/compInfo', SA.companyinfo);
-router.get('/alarms', SA.alarms);
+// router.get('/alarms', SA.alarms);
 router.get('/notification', SA.notification);
 
 ///router.put('/editDevice/:deviceId', dashboard.editDevice);
-router.get('/transports/:interval', SA.graph1);
-router.get('/Jsfunction/:interval', SA.graph2);
-router.get('/alarmsActivity/:interval', SA.graph3);
-router.get('/ruleEngine/:interval', SA.graph4);
+// router.get('/transports/:interval', SA.graph1);
+// router.get('/Jsfunction/:interval', SA.graph2);
+// router.get('/alarmsActivity/:interval', SA.graph3);
+// router.get('/ruleEngine/:interval', SA.graph4);
 
-router.get('/transportdata', SA.transportdata);
-router.get('/JSdata', SA.JSdata);
-router.get('/ruleEnginedata', SA.ruleEnginedata);
-router.get('/telementrydata', SA.telementrydata);
+// router.get('/transportdata', SA.transportdata);
+// router.get('/JSdata', SA.JSdata);
+// router.get('/ruleEnginedata', SA.ruleEnginedata);
+// router.get('/telementrydata', SA.telementrydata);
+
+
+
 module.exports = router;
