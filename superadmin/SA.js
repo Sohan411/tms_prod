@@ -9,218 +9,218 @@ const secure = require('../token/secure');
 // const ejs = require('ejs');
 
 function fetchAllUsers(req, res) {
-    try {
-      const query = 'SELECT * FROM tms_users';
-      db.query(query, (error, rows) => {
-        if (error) {
-          throw new Error('Error fetching users');
-        }
-        const encryptedUsers = secure.encryptData(rows, encryptKey);
-  
-        res.json({ users: rows });
-        /*res.json({ users: encryptedUsers });*/
-        console.log(rows);
-        console.log(encryptedUsers)
-      });
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  }
+  try {
+    const query = 'SELECT * FROM tms_users';
+    db.query(query, (error, rows) => {
+      if (error) {
+        throw new Error('Error fetching users');
+      }
+      const encryptedUsers = secure.encryptData(rows, encryptKey);
 
-  function fetchAllDevices(req, res) {
-    try {
-      const query = 'SELECT * FROM tms_devices';
-      db.query(query, (error, rows) => {
-        if (error) {
-          throw new Error('Error fetching devices');
-        }
-        res.json({ devices: rows });
-        console.log(rows);
-      });
-    } catch (error) {
-      console.error('Error fetching Devices:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
+      res.json({ users: rows });
+      /*res.json({ users: encryptedUsers });*/
+      console.log(rows);
+      console.log(encryptedUsers)
+    });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
+}
+
+function fetchAllDevices(req, res) {
+  try {
+    const query = 'SELECT * FROM tms_devices';
+    db.query(query, (error, rows) => {
+      if (error) {
+        throw new Error('Error fetching devices');
+      }
+      res.json({ devices: rows });
+      console.log(rows);
+    });
+  } catch (error) {
+    console.error('Error fetching Devices:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
 function userByCompanyname(req, res) {
-    try {
-      const company_name = req.params.company_name;
-      const getDeviceByIdQuery = 'SELECT FirstName,LastName,CompanyName,CompanyEmail,ContactNo,Location,UserType,PersonalEmail FROM tms_users WHERE CompanyName = ?';
-  
-      db.query(getDeviceByIdQuery, [company_name], (error, result) => {
-        if (error) {
-          console.error('Error fetching device:', error);
-          return res.status(500).json({ message: 'Internal server error' });
-        }
-  
-        if (result.length === 0) {
-          return res.status(404).json({ message: 'User not found' });
-        }
-  
-        res.json(result);
-      });
-    } catch (error) {
-      console.error('Error fetching device:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
+  try {
+    const company_name = req.params.company_name;
+    const getDeviceByIdQuery = 'SELECT FirstName,LastName,CompanyName,CompanyEmail,ContactNo,Location,UserType,PersonalEmail FROM tms_users WHERE CompanyName = ?';
+
+    db.query(getDeviceByIdQuery, [company_name], (error, result) => {
+      if (error) {
+        console.error('Error fetching device:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+      }
+
+      if (result.length === 0) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.json(result);
+    });
+  } catch (error) {
+    console.error('Error fetching device:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
+}
 
 
   //DEVICES
   
 
-  function getDeviceByUID(req, res) {
-    try {
-      const deviceUID = req.params.deviceUID;
-      const getDeviceByIdQuery = 'SELECT * FROM tms_devices WHERE DeviceUID = ?';
-  
-      db.query(getDeviceByIdQuery, [deviceUID], (error, result) => {
-        if (error) {
-          console.error('Error fetching device:', error);
-          return res.status(500).json({ message: 'Internal server error' });
-        }
-  
-        if (result.length === 0) {
-          return res.status(404).json({ message: 'Device not found' });
-        }
-  
-        res.json(result[0]);
-      });
-    } catch (error) {
-      console.error('Error fetching device:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  }
+function getDeviceByUID(req, res) {
+  try {
+    const deviceUID = req.params.deviceUID;
+    const getDeviceByIdQuery = 'SELECT * FROM tms_devices WHERE DeviceUID = ?';
 
-  function updateDevice(req, res) {
-    try {
-      const deviceUID = req.params.deviceUID;
-      const { EntryId, DeviceLocation, DeviceName, CompanyEmail, CompanyName } = req.body;
-      const updateDeviceQuery =
-        'UPDATE tms_devices SET EntryId=?, DeviceLocation=?, DeviceName=?, CompanyEmail=?, CompanyName=? WHERE DeviceUID=?';
-  
-      db.query(
-        updateDeviceQuery,
-        [EntryId, DeviceLocation, DeviceName, CompanyEmail, CompanyName, deviceUID],
-        (error, result) => {
-          if (error) {
-            console.error('Error updating device:', error);
-            return res.status(500).json({ message: 'Internal server error' });
-          }
-  
-          if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Device not found' });
-          }
-  
-          res.json({ message: 'Device updated successfully' });
-        }
-      );
-    } catch (error) {
-      console.error('Error updating device:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  }
-
-
-
- 
-  function fetchCompanyDetails(req, res) {
-    const CompanyEmail = req.params.CompanyEmail;
-    const companyQuery = 'SELECT CompanyName, ContactNo, Location, Designation FROM tms_users WHERE CompanyEmail = ?';
-  
-    db.query(companyQuery, [CompanyEmail], (error, companyResult) => {
+    db.query(getDeviceByIdQuery, [deviceUID], (error, result) => {
       if (error) {
-        console.error('Error fetching company details:', error);
+        console.error('Error fetching device:', error);
         return res.status(500).json({ message: 'Internal server error' });
       }
-  
-      if (companyResult.length === 0) {
-        console.log('company not found!');
-        return res.status(404).json({ message: 'company not found!' });
-      }
-  
-      const company = companyResult[0];
-      res.json({ companyDetails: company });
-    });
-  }
 
-  function fetchCounts(req, res) {
-    const CompanyEmail = req.params.CompanyEmail;
-    const standardUserCountQuery = 'SELECT COUNT(*) AS standardUserCount FROM tms_users WHERE CompanyEmail = ? AND UserType = "Standard"';
-    const adminCountQuery = 'SELECT COUNT(*) AS adminCount FROM tms_users WHERE CompanyEmail = ? AND UserType = "Admin"';
-    const deviceCountQuery = 'SELECT COUNT(*) AS deviceCount FROM tms_devices WHERE CompanyEmail = ?';
-    const userCountQuery = 'SELECT COUNT(*) AS userCount FROM tms_users WHERE CompanyEmail = ?';
-  
-    try {
-      db.query(standardUserCountQuery, [CompanyEmail], (error, standardUserResult) => {
+      if (result.length === 0) {
+        return res.status(404).json({ message: 'Device not found' });
+      }
+
+      res.json(result[0]);
+    });
+  } catch (error) {
+    console.error('Error fetching device:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+function updateDevice(req, res) {
+  try {
+    const deviceUID = req.params.deviceUID;
+    const { EntryId, DeviceLocation, DeviceName, CompanyEmail, CompanyName } = req.body;
+    const updateDeviceQuery =
+      'UPDATE tms_devices SET EntryId=?, DeviceLocation=?, DeviceName=?, CompanyEmail=?, CompanyName=? WHERE DeviceUID=?';
+
+    db.query(
+      updateDeviceQuery,
+      [EntryId, DeviceLocation, DeviceName, CompanyEmail, CompanyName, deviceUID],
+      (error, result) => {
         if (error) {
-          console.error('Error fetching standard user count:', error);
+          console.error('Error updating device:', error);
+          return res.status(500).json({ message: 'Internal server error' });
+        }
+
+        if (result.affectedRows === 0) {
+          return res.status(404).json({ message: 'Device not found' });
+        }
+
+        res.json({ message: 'Device updated successfully' });
+      }
+    );
+  } catch (error) {
+    console.error('Error updating device:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+
+
+
+function fetchCompanyDetails(req, res) {
+  const CompanyEmail = req.params.CompanyEmail;
+  const companyQuery = 'SELECT CompanyName, ContactNo, Location, Designation FROM tms_users WHERE CompanyEmail = ?';
+
+  db.query(companyQuery, [CompanyEmail], (error, companyResult) => {
+    if (error) {
+      console.error('Error fetching company details:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+
+    if (companyResult.length === 0) {
+      console.log('company not found!');
+      return res.status(404).json({ message: 'company not found!' });
+    }
+
+    const company = companyResult[0];
+    res.json({ companyDetails: company });
+  });
+}
+
+function fetchCounts(req, res) {
+  const CompanyEmail = req.params.CompanyEmail;
+  const standardUserCountQuery = 'SELECT COUNT(*) AS standardUserCount FROM tms_users WHERE CompanyEmail = ? AND UserType = "Standard"';
+  const adminCountQuery = 'SELECT COUNT(*) AS adminCount FROM tms_users WHERE CompanyEmail = ? AND UserType = "Admin"';
+  const deviceCountQuery = 'SELECT COUNT(*) AS deviceCount FROM tms_devices WHERE CompanyEmail = ?';
+  const userCountQuery = 'SELECT COUNT(*) AS userCount FROM tms_users WHERE CompanyEmail = ?';
+
+  try {
+    db.query(standardUserCountQuery, [CompanyEmail], (error, standardUserResult) => {
+      if (error) {
+        console.error('Error fetching standard user count:', error);
+        throw new Error('Internal server error');
+      }
+
+      const standardUserCount = standardUserResult[0].standardUserCount;
+
+      db.query(adminCountQuery, [CompanyEmail], (error, adminResult) => {
+        if (error) {
+          console.error('Error fetching admin count:', error);
           throw new Error('Internal server error');
         }
-  
-        const standardUserCount = standardUserResult[0].standardUserCount;
-  
-        db.query(adminCountQuery, [CompanyEmail], (error, adminResult) => {
+
+        const adminCount = adminResult[0].adminCount;
+
+        db.query(deviceCountQuery, [CompanyEmail], (error, deviceResult) => {
           if (error) {
-            console.error('Error fetching admin count:', error);
+            console.error('Error fetching device count:', error);
             throw new Error('Internal server error');
           }
-  
-          const adminCount = adminResult[0].adminCount;
-  
-          db.query(deviceCountQuery, [CompanyEmail], (error, deviceResult) => {
+
+          const deviceCount = deviceResult[0].deviceCount;
+
+          db.query(userCountQuery, [CompanyEmail], (error, userResult) => {
             if (error) {
-              console.error('Error fetching device count:', error);
+              console.error('Error fetching user count:', error);
               throw new Error('Internal server error');
             }
-  
-            const deviceCount = deviceResult[0].deviceCount;
-  
-            db.query(userCountQuery, [CompanyEmail], (error, userResult) => {
-              if (error) {
-                console.error('Error fetching user count:', error);
-                throw new Error('Internal server error');
-              }
-  
-              const userCount = userResult[0].userCount;
-  
-              res.json({
-                standardUserCount: standardUserCount,
-                adminCount: adminCount,
-                deviceCount: deviceCount,
-                userCount: userCount,
-              });
+
+            const userCount = userResult[0].userCount;
+
+            res.json({
+              standardUserCount: standardUserCount,
+              adminCount: adminCount,
+              deviceCount: deviceCount,
+              userCount: userCount,
             });
           });
         });
       });
-    } catch (error) {
-      console.error('Error occurred:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  }
-  
-  
-  function usermanagement(req, res) {
-    const userQuery = 'SELECT UserId,Username,CompanyName, Designation,PersonalEmail,Location,ContactNo,Block FROM tms_users';
-  
-    db.query(userQuery, (error, userResult) => {
-      if (error) {
-        console.error('Error fetching user details:', error);
-        return res.status(500).json({ message: 'Internal server error' });
-      }
-  
-      if (userResult.length === 0) {
-        console.log('users not found!');
-        return res.status(404).json({ message: 'users not found!' });
-      }
-  
-      const users = userResult;
-      res.json({ userDetails: users });
     });
+  } catch (error) {
+    console.error('Error occurred:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
+}
+
+
+function usermanagement(req, res) {
+  const userQuery = 'SELECT UserId,Username,CompanyName, Designation,PersonalEmail,Location,ContactNo,Block FROM tms_users';
+
+  db.query(userQuery, (error, userResult) => {
+    if (error) {
+      console.error('Error fetching user details:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+
+    if (userResult.length === 0) {
+      console.log('users not found!');
+      return res.status(404).json({ message: 'users not found!' });
+    }
+
+    const users = userResult;
+    res.json({ userDetails: users });
+  });
+}
   // function apilogs(req, res) {
   //   try {
   //     const timeInterval = req.params.interval; 
@@ -284,48 +284,48 @@ function userByCompanyname(req, res) {
     //   }
     // }
   
-    function userInfo(req, res) {
-      try {
-        const query = 'SELECT * FROM user_info';
-        db.query(query, (error, rows) => {
-          if (error) {
-            throw new Error('Error fetching logs');
-          }
-          res.json({ logs: rows });
-        });
-      } catch (error) {
-        console.error('Error fetching logs:', error);
-        res.status(500).json({ message: 'Internal server error' });
+function userInfo(req, res) {
+  try {
+    const query = 'SELECT * FROM user_info';
+    db.query(query, (error, rows) => {
+      if (error) {
+        throw new Error('Error fetching logs');
       }
-    }
-    function deviceInfo(req, res) {
-      try {
-        const query = 'SELECT * FROM dev_info';
-        db.query(query, (error, rows) => {
-          if (error) {
-            throw new Error('Error fetching logs');
-          }
-          res.json({ logs: rows });
-        });
-      } catch (error) {
-        console.error('Error fetching logs:', error);
-        res.status(500).json({ message: 'Internal server error' });
+      res.json({ logs: rows });
+    });
+  } catch (error) {
+    console.error('Error fetching logs:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+function deviceInfo(req, res) {
+  try {
+    const query = 'SELECT * FROM dev_info';
+    db.query(query, (error, rows) => {
+      if (error) {
+        throw new Error('Error fetching logs');
       }
-    }
-    function companyinfo(req, res) {
-      try {
-        const query = 'SELECT * FROM company_info';
-        db.query(query, (error, rows) => {
-          if (error) {
-            throw new Error('Error fetching logs');
-          }
-          res.json({ logs: rows });
-        });
-      } catch (error) {
-        console.error('Error fetching logs:', error);
-        res.status(500).json({ message: 'Internal server error' });
+      res.json({ logs: rows });
+    });
+  } catch (error) {
+    console.error('Error fetching logs:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+function companyinfo(req, res) {
+  try {
+    const query = 'SELECT * FROM company_info';
+    db.query(query, (error, rows) => {
+      if (error) {
+        throw new Error('Error fetching logs');
       }
-    }
+      res.json({ logs: rows });
+    });
+  } catch (error) {
+    console.error('Error fetching logs:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
   
     // function alarms(req, res) {
     //   try {
@@ -342,20 +342,20 @@ function userByCompanyname(req, res) {
     //   }
     // }
   
-    function notification(req, res) {
-      try {
-        const query = 'SELECT * FROM info_twi';
-        db.query(query, (error, rows) => {
-          if (error) {
-            throw new Error('Error fetching logs');
-          }
-          res.json({ logs: rows });
-        });
-      } catch (error) {
-        console.error('Error fetching logs:', error);
-        res.status(500).json({ message: 'Internal server error' });
+function notification(req, res) {
+  try {
+    const query = 'SELECT * FROM info_twi';
+    db.query(query, (error, rows) => {
+      if (error) {
+        throw new Error('Error fetching logs');
       }
-    }
+      res.json({ logs: rows });
+    });
+  } catch (error) {
+    console.error('Error fetching logs:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
     // function fetchLogs(req, res) {
     //   try {
     //     const timeInterval = req.params.interval; 
@@ -610,109 +610,109 @@ function userByCompanyname(req, res) {
 // Initial call to start monitoring
 //monitorAndSyncDevices();
     
-    function deleteDevice(req, res) {
-      try {
-        const deviceUID = req.params.deviceUID;
-        const deleteDeviceQuery = 'DELETE FROM tms_devices WHERE deviceuid = ?';
-    
-        db.query(deleteDeviceQuery, [deviceUID], (error, result) => {
-          if (error) {
-            console.error('Error deleting device:', error);
-            return res.status(500).json({ message: 'Internal server error' });
-          }
-    
-          if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Device not found' });
-          }
-    
-          res.json({ message: 'Device deleted successfully' });
-        });
-      } catch (error) {
+function deleteDevice(req, res) {
+  try {
+    const deviceUID = req.params.deviceUID;
+    const deleteDeviceQuery = 'DELETE FROM tms_devices WHERE deviceuid = ?';
+
+    db.query(deleteDeviceQuery, [deviceUID], (error, result) => {
+      if (error) {
         console.error('Error deleting device:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Internal server error' });
       }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Device not found' });
+      }
+
+      res.json({ message: 'Device deleted successfully' });
+    });
+  } catch (error) {
+    console.error('Error deleting device:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+function removeUser(req, res) {
+  const userId = req.params.userId; 
+  const getUserQuery = 'SELECT * FROM tms_users WHERE UserId = ?';
+  db.query(getUserQuery, [userId], (error, userResult) => {
+    if (error) {
+      console.error('Error during user retrieval:', error);
+      return res.status(500).json({ message: 'Internal server error' });
     }
 
-    function removeUser(req, res) {
-      const userId = req.params.userId; 
-      const getUserQuery = 'SELECT * FROM tms_users WHERE UserId = ?';
-      db.query(getUserQuery, [userId], (error, userResult) => {
+    try {
+      if (userResult.length === 0) {
+        console.log('User not found');
+        return res.status(404).json({ message: 'User not found' });
+      }
+      const deleteUserQuery = 'DELETE FROM tms_users WHERE UserId = ?';
+      db.query(deleteUserQuery, [userId], (error, deleteResult) => {
         if (error) {
-          console.error('Error during user retrieval:', error);
+          console.error('Error during user deletion:', error);
           return res.status(500).json({ message: 'Internal server error' });
         }
-    
+
         try {
-          if (userResult.length === 0) {
-            console.log('User not found');
-            return res.status(404).json({ message: 'User not found' });
-          }
-          const deleteUserQuery = 'DELETE FROM tms_users WHERE UserId = ?';
-          db.query(deleteUserQuery, [userId], (error, deleteResult) => {
-            if (error) {
-              console.error('Error during user deletion:', error);
-              return res.status(500).json({ message: 'Internal server error' });
-            }
-    
-            try {
-              console.log('User deleted successfully');
-              res.json({ message: 'User deleted successfully' });
-            } catch (error) {
-              console.error('Error responding to user deletion:', error);
-              res.status(500).json({ message: 'Internal server error' });
-            }
-          });
+          console.log('User deleted successfully');
+          res.json({ message: 'User deleted successfully' });
         } catch (error) {
-          console.error('Error during user removal:', error);
+          console.error('Error responding to user deletion:', error);
           res.status(500).json({ message: 'Internal server error' });
         }
       });
+    } catch (error) {
+      console.error('Error during user removal:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
+  });
+}
 
-    function deviceCount(req, res) {
-      const deviceQuery = 'SELECT COUNT(*) AS deviceCount FROM tms_devices';
-      const activeQuery = 'SELECT COUNT(*) AS activeCount FROM tms_devices WHERE  status = "1"';
-      const inactiveQuery = 'SELECT COUNT(*) AS inactiveCount FROM tms_devices WHERE status = "0"';
-      
-      try {
-        db.query(deviceQuery, (error, deviceQuery) => {
+function deviceCount(req, res) {
+  const deviceQuery = 'SELECT COUNT(*) AS deviceCount FROM tms_devices';
+  const activeQuery = 'SELECT COUNT(*) AS activeCount FROM tms_devices WHERE  status = "1"';
+  const inactiveQuery = 'SELECT COUNT(*) AS inactiveCount FROM tms_devices WHERE status = "0"';
+  
+  try {
+    db.query(deviceQuery, (error, deviceQuery) => {
+      if (error) {
+        console.error('Error fetching standard user count:', error);
+        throw new Error('Internal server error');
+      }
+
+      const deviceCount = deviceQuery[0].deviceCount;
+
+      db.query(activeQuery, (error, activeResult) => {
+        if (error) {
+          console.error('Error fetching admin count:', error);
+          throw new Error('Internal server error');
+        }
+
+        const activeCount = activeResult[0].activeCount;
+
+        db.query(inactiveQuery,(error, inactiveResult) => {
           if (error) {
-            console.error('Error fetching standard user count:', error);
+            console.error('Error fetching device count:', error);
             throw new Error('Internal server error');
           }
-    
-          const deviceCount = deviceQuery[0].deviceCount;
-    
-          db.query(activeQuery, (error, activeResult) => {
-            if (error) {
-              console.error('Error fetching admin count:', error);
-              throw new Error('Internal server error');
-            }
-    
-            const activeCount = activeResult[0].activeCount;
-    
-            db.query(inactiveQuery,(error, inactiveResult) => {
-              if (error) {
-                console.error('Error fetching device count:', error);
-                throw new Error('Internal server error');
-              }
-    
-              const inactiveCount = inactiveResult[0].inactiveCount;
-                res.json({
-                  deviceCount: deviceCount,
-                  activeCount:activeCount,
-                  inactiveCount:inactiveCount
-                  
-                });
-              });
+
+          const inactiveCount = inactiveResult[0].inactiveCount;
+            res.json({
+              deviceCount: deviceCount,
+              activeCount:activeCount,
+              inactiveCount:inactiveCount
+              
             });
           });
-      
-      } catch (error) {
-        console.error('Error occurred:', error);
-        res.status(500).json({ message: 'Internal server error' });
-      }
-    }
+        });
+      });
+  
+  } catch (error) {
+    console.error('Error occurred:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
     
     // function transportdata(req, res) {
     //   try {

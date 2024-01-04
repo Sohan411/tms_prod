@@ -5,11 +5,11 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const https = require('https')
 
-const privateKey = fs.readFileSync('./certs/private-key.pem', 'utf8');
-const publicCert = fs.readFileSync('./certs/public-cert.pem', 'utf8');
-const certificateChain = fs.readFileSync('./certs/ca-cert.pem', 'utf8');
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/tms.senselive.in/privkey.pem', 'utf8');
+const fullchain = fs.readFileSync('/etc/letsencrypt/live/tms.senselive.in/fullchain.pem', 'utf8');
 
-const credentials = { key: privateKey, cert: publicCert, ca: certificateChain };
+
+const credentials = { key: privateKey, cert: fullchain };
 
 
 const app = express();
