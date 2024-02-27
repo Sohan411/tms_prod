@@ -3,7 +3,8 @@ const mysql = require('mysql2');
 const os = require('os');
 
 // MQTT broker URL
-const broker = 'ws://dashboard.senselive.in:9001';
+//const broker = 'ws://dashboard.senselive.in:9001';
+const broker = 'ws://65.2.127.156:9001';
 
 // MySQL configuration
 const mysqlConfig = {
@@ -86,7 +87,7 @@ mqttClient.on('message', (topic, message) => {
       if (error) {
         console.error('Error inserting data into MySQL:', error);
       } else {
-      //console.log('Data inserted into MySQL');
+      console.log('Data inserted into MySQL');
       }
     });
   } catch (error) {
