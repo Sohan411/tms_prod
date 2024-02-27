@@ -3,10 +3,10 @@ const mysql = require('mysql');
 
 // Create a MySQL connection pool
 const db = mysql.createPool({
-  host: '13.200.38.129',
-  user: 'mysql',
+  host: 'senselivedb.cn5vfllmzwrp.ap-south-1.rds.amazonaws.com',
+  user: 'admin',
   password: 'sense!123',
-  database: 'tms',
+  database: 'tmp',
 });
 
 // Schedule the script to run every minute
