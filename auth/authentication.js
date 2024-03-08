@@ -307,6 +307,7 @@ function register_dashboard(req, res) {
     personalEmail,
     designation,
     password,
+    userType
   } = req.body;
 
   // Generate a UUID for tenant_id
@@ -366,7 +367,7 @@ function register_dashboard(req, res) {
                 companyEmail,
                 contact,
                 location,
-                'Admin',
+                userType,
                 personalEmail,
                 hashedPassword,
                 designation,

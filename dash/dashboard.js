@@ -273,7 +273,8 @@ function getDataByTimeInterval(req, res) {
           ROUND(AVG(flowRate), 1) AS flowRate,
           ROUND(AVG(TemperatureR), 1) AS TemperatureR,
           ROUND(AVG(TemperatureB), 1) AS TemperatureB,
-          ROUND(AVG(TemperatureY), 1) AS TemperatureY
+          ROUND(AVG(TemperatureY), 1) AS TemperatureY,
+          ROUND(AVG(Pressure), 1) AS Pressure
         FROM
           actual_data
         WHERE
@@ -296,7 +297,8 @@ function getDataByTimeInterval(req, res) {
           ROUND(AVG(flowRate), 1) AS flowRate,
           ROUND(AVG(TemperatureR), 1) AS TemperatureR,
           ROUND(AVG(TemperatureB), 1) AS TemperatureB,
-          ROUND(AVG(TemperatureY), 1) AS TemperatureY
+          ROUND(AVG(TemperatureY), 1) AS TemperatureY,
+          ROUND(AVG(Pressure), 1) AS Pressure
         FROM
           actual_data
         WHERE
@@ -319,7 +321,8 @@ function getDataByTimeInterval(req, res) {
           ROUND(AVG(flowRate), 1) AS flowRate,
           ROUND(AVG(TemperatureR), 1) AS TemperatureR,
           ROUND(AVG(TemperatureB), 1) AS TemperatureB,
-          ROUND(AVG(TemperatureY), 1) AS TemperatureY
+          ROUND(AVG(TemperatureY), 1) AS TemperatureY,
+          ROUND(AVG(Pressure), 1) AS Pressure
         FROM
           actual_data
         WHERE
@@ -342,7 +345,8 @@ function getDataByTimeInterval(req, res) {
           ROUND(AVG(flowRate), 1) AS flowRate,
           ROUND(AVG(TemperatureR), 1) AS TemperatureR,
           ROUND(AVG(TemperatureB), 1) AS TemperatureB,
-          ROUND(AVG(TemperatureY), 1) AS TemperatureY
+          ROUND(AVG(TemperatureY), 1) AS TemperatureY,
+          ROUND(AVG(Pressure), 1) AS Pressure
         FROM
           actual_data
         WHERE
@@ -365,7 +369,8 @@ function getDataByTimeInterval(req, res) {
           ROUND(AVG(flowRate), 1) AS flowRate,
           ROUND(AVG(TemperatureR), 1) AS TemperatureR,
           ROUND(AVG(TemperatureB), 1) AS TemperatureB,
-          ROUND(AVG(TemperatureY), 1) AS TemperatureY
+          ROUND(AVG(TemperatureY), 1) AS TemperatureY,
+          ROUND(AVG(Pressure), 1) AS Pressure
         FROM
           actual_data
         WHERE
@@ -553,7 +558,8 @@ function getDataByCustomDate(req, res) {
           AVG(flowRate) AS flowRate,
           AVG(TemperatureR) AS TemperatureR,
           AVG(TemperatureB) AS TemperatureB,
-          AVG(TemperatureY) AS TemperatureY
+          AVG(TemperatureY) AS TemperatureY,
+          ROUND(AVG(Pressure), 1) AS Pressure
         FROM
           actual_data
         WHERE
@@ -1403,7 +1409,7 @@ function deleteDevice(req, res) {
       }
 
       // Delete related records from tms_triggers table
-      const deleteTriggersQuery = 'DELETE FROM tms_triggers WHERE DeviceUID = ?';
+      const deleteTriggersQuery = 'DELETE FROM tms_trigger WHERE DeviceUID = ?';
       db.query(deleteTriggersQuery, [deviceUID], (triggersError, triggersResult) => {
         if (triggersError) {
           console.error('Error deleting triggers:', triggersError);
@@ -1468,10 +1474,11 @@ function fetchLatestEntry(req, res) {
     Humidity: null,
     flowRate: null,
     totalVolume: null,
-    TimeStamp: "0000-00-00T00:00:00.000Z",
+    TimeStamp: new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000).toISOString(),
     ip_address: "0.0.0.0",
     status: null
   };
+  console.log(defaultEntry);
 
   db.query(fetchUserDevicesQuery, [companyEmail], (fetchUserDevicesError, devices) => {
     if (fetchUserDevicesError) {
