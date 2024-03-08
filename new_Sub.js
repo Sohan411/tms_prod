@@ -55,7 +55,7 @@ mqttClient.on('message', (topic, message) => {
 
     const insertQuery = `
     INSERT INTO actual_data (DeviceUID, Temperature, Timestamp, TemperatureR, TemperatureY, TemperatureB, Humidity, flowRate, Pressure, totalVolume, ip_address)
-    VALUES (?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const insertValues = [
